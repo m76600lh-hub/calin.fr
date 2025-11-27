@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Câlin.fr – L’amour profond, sans pression</title>
+    <meta name="description" content="Rencontres pour personnes asexuelles et celles qui cherchent l’amour sans pression sexuelle – 30–50 ans – France & francophonie">
+    <style>
+        :root { --beige: #f8f4f0; --rose: #e8d5c4; --violet: #d4c4d8; --gris: #6b5e4a; --doré: #d4a574; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: 'Georgia', serif; background: linear-gradient(to bottom, var(--beige), var(--rose)); color: var(--gris); line-height:1.6; min-height:100vh; }
+        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+        header { text-align:center; padding: 60px 0 40px; }
+        h1 { font-size: 3.2em; color: var(--doré); margin-bottom: 10px; }
+        .slogan { font-size: 1.4em; font-style:italic; color: var(--gris); margin-bottom: 50px; }
+        .card { background: white; border-radius: 16px; padding: 30px; margin: 30px 0; box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
+        input, select, textarea, button {
+            width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 1.1em;
+        }
+        button { background: var(--doré); color: white; border: none; cursor: pointer; font-size: 1.2em; padding: 16px; border-radius: 12px; }
+        button:hover { background: #b5895e; }
+        .profiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 40px; }
+        .profile { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.07); text-align:center; padding-bottom:20px; }
+        .profile img { width:100%; height:260px; object-fit:cover; }
+        .profile h3 { margin:15px 0 8px; color: var(--doré); }
+        .tag { background: var(--violet); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.9em; display: inline-block; margin: 5px; }
+        .hidden { display:none; }
+        footer { text-align:center; padding:60px; color: var(--gris); font-size:0.9em; margin-top:80px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Câlin.fr</h1>
+            <p class="slogan">L’amour profond, sans pression.<br>
+            Ici, le sexe n’est jamais obligatoire. La tendresse, oui.</p>
+        </header>
+
+        <!-- Inscription / Connexion -->
+        <div id="auth" class="card">
+            <h2>Rejoindre Câlin</h2>
+            <input type="email" id="email" placeholder="Ton e-mail" required>
+            <input type="password" id="pass" placeholder="Mot de passe" required>
+            <button onclick="login()">Entrer / S’inscrire gratuitement</button>
+        </div>
+
+        <!-- Créer le profil -->
+        <div id="createProfile" class="card hidden">
+            <h2>Présente-toi</h2>
+            <input type="text" id="prenom" placeholder="Prénom ou pseudo">
+            <select id="romantique">
+                <option value="">Orientation romantique</option>
+                <option>Hétéromantique</option><option>Homoromantique</option><option>Biromantique</option>
+                <option>Panromantique</option><option>Aromantique</option><option>En questionnement</option>
+            </select>
+            <select id="contact">
+                <option value="">Contact physique souhaité</option>
+                <option>Câlins & tendresse</option><option>Main dans la main</option><option>Peu ou pas de contact</option>
+            </select>
+            <textarea id="bio" rows="4" placeholder="Quelques mots sur toi et ce que tu recherches…"></textarea>
+            <button onclick="saveAndShow()">Voir les profils</button>
+        </div>
+
+        <!-- Liste des profils -->
+        <div id="list" class="hidden">
+            <h2 style="text-align:center; margin:40px 0;">Profils près de chez toi</h2>
+            <div class="profiles" id="profilesContainer"></div>
+        </div>
+    </div>
+
+    <footer>© 2025 Câlin.fr – L’amour profond, sans pression</footer>
+
+    <script>
+        const users = [
+            {name:"Léa", age:38, romantique:"Biromantique", contact:"Câlins & tendresse", bio:"Adore les soirées plaid + thé + discussions jusqu’à 4h du matin", img:"https://images.unsplash.com/photo-1554151228f711a2d8cb-3?w=600"},
+            {name:"Sam", age:42, romantique:"Aromantique", contact:"Peu ou pas de contact", bio:"Cherche relation queerplatonic ou amitié très profonde", img:"https://images.unsplash.com/photo-150?w=600"},
+            {name:"Alex", age:35, romantique:"Homoromantique", contact:"Main dans la main", bio:"Fan de balades en forêt et de longues lettres manuscrites", img:"https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600"},
+            {name:"Morgan", age:45, romantique:"Panromantique", contact:"Câlins & tendresse", bio:"Musicien·ne, adore cuisiner pour deux et regarder des documentaires", img:"https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600"},
+            {name:"Charlie", age:39, romantique:"Hétéromantique", contact:"Câlins & tendresse", bio:"Lecteur vorace, recherche connexion émotionnelle intense", img:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600"}
+        ];
+
+        function login() {
+            const mail = document.getElementById("email").value;
+            if (mail.includes("@")) {
+                document.getElementById("auth").classList.add("hidden");
+                document.getElementById("createProfile").classList.remove("hidden");
+            } else alert("Entre un e-mail valide");
+        }
+
+        function saveAndShow() {
+            if (document.getElementById("prenom").value) {
+                document.getElementById("createProfile").classList.add("hidden");
+                document.getElementById("list").classList.remove("hidden");
+                showProfiles();
+            } else alert("Au moins ton prénom");
+        }
+
+        function showProfiles() {
+            const container = document.getElementById("profilesContainer");
+            users.forEach(u => {
+                container.innerHTML += `
+                <div class="profile">
+   <img src="${u.img}" alt="${u.name}">
+   <h3>${u.name}, ${u.age} ans</h3>
+   <div><span class="tag">${u.romantique}</span> <span class="tag">${u.contact}</span></div>
+   <p style="padding:0 15px; margin:15px 0;">${u.bio}</p>
+   <button onclick="alert('Message envoyé à ${u.name} ❤️')">Envoyer un câlin</button>
+ </div>`;
+            });
+        }
+    </script>
+</body>
